@@ -34,8 +34,15 @@ echo '<pre>'; print("Connected successfully"); echo '</pre>';
 /**
  * Step 4 (Recommended): Query database for list of tables
  */
-$tables = array_column(mysqli_fetch_all($conn->query('SHOW TABLES')), 0);
-echo '<pre>'; print_r($tables); echo '</pre>';
+$sql = "SHOW TABLES";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+// output data of each row
+    while ($row = $result->fetch_assoc()) {
+        echo '<pre>'; print_r($row); echo '<pre>';
+    }
+}
 
 /**
  * Step 5: Execute SQL to get information about users
