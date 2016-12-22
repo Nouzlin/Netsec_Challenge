@@ -22,12 +22,9 @@ else if($imageFileType == "exe" || $imageFileType == "php" || $imageFileType == 
 }
 else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-        $message = "The file ". basename($_FILES["fileToUpload"]["name"]) . " has been uploaded. \n
-                                Please use the following reference id to claim ownership
-                                if you would happen to win the competition: " . $reference_id;
+        $message = "File successfully uploaded. Your reference number is " . $reference_id . " please save it!";
     } else {
-        $message = "  : " .  $_FILES["fileToUpload"]["tmp_name"] . "   -> " . $target_file .
-            "Sorry, there was an error uploading your file.";
+        $message = "Sorry, there was an error uploading your file.";
     }
 }
 echo '<html>
@@ -256,11 +253,9 @@ echo '<html>
                         <li>100 BigBank Club Points</li>
                     </ol>
                     <br/>
-
-<p class="error">' . $message . ' <a href="/">Back</a> </p>
+                     <p>' . $message . ' <a href="/">Back to form</a> </p>
                 </div>
             </div>
-            <div class="clearthis">&nbsp;</div>
         </div>
     </div>
     <div id="page_footer">&copy;2016 BigBank</div>
