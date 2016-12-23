@@ -3,7 +3,8 @@ $target_dir = "competition/";
 $reference_id = uniqid();
 $ext = pathinfo($_FILES["fileToUpload"]["name"], PATHINFO_EXTENSION);
 $target_file = $target_dir . $reference_id . "." . $ext;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+$blacklistExtensions = array("exe", "php", "html", "php5", "pht", "shtml", "asa", "cer", "asax", "swf", "xap", "asp", "txt");
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 // Check if image file is a actual image or fake image
 // Check if file already exists
 if (!$_FILES["fileToUpload"]["name"]) {
@@ -17,8 +18,8 @@ else if ($_FILES["fileToUpload"]["size"] > 500000) {
     $message = "Sorry, your file is too large.\n";
 }
 // Allow certain file formats
-else if($imageFileType == "exe" || $imageFileType == "php" || $imageFileType == "html") {
-    $message = "Sorry, EXE, PHP, HTML files are not allowed. Please provide a valid image.\n";
+else if(in_array($imageFileType, $blacklistExtensions)) {
+    $message = "Sorry, this file type is not allowed. Please provide a valid image.\n";
 }
 else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
