@@ -18,7 +18,7 @@ else if ($_FILES["fileToUpload"]["size"] > 500000) {
 }
 // Allow certain file formats
 else if($imageFileType == "exe" || $imageFileType == "php" || $imageFileType == "html") {
-    $message = "Sorry, EXE, PHP, HTML files are allowed.\n";
+    $message = "Sorry, EXE, PHP, HTML files are not allowed. Please provide a valid image.\n";
 }
 else {
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
