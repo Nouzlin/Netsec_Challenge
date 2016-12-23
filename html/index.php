@@ -1,9 +1,45 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?php
+$target_dir = "competition/";
+$reference_id = uniqid();
+$ext = pathinfo($_FILES["fileToUpload"]["name"], PATHINFO_EXTENSION);
+$target_file = $target_dir . $reference_id . "." . $ext;
+$blacklistExtensions = array("exe", "php", "html", "php5", "pht", "shtml", "asa", "cer", "asax", "swf", "xap", "asp", "txt");
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// Check if image file is a actual image or fake image
+// Check if file already exists
+if (!$_FILES["fileToUpload"]["name"]) {
+    $message = '<form action="index.php" method="post" enctype="multipart/form-data">
+                        Select image to upload:
+                        <input type="file" name="fileToUpload" id="fileToUpload">
+                        <input type="submit" value="Upload Image" name="submit">
+                    </form>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+                    <p><strong>Once you have submitted your entry, you will be given an unguessable identification
+                        number for future reference.
+                        Please save it for verification that the entry is yours, if you happen to be one of the three
+                        winners. </strong></p>';
+}
+else if (file_exists($target_file)) {
+    $message = "Sorry, file already exists. <a href='index.php'>Back to form</a>";
+}
+// Check file size
+else if ($_FILES["fileToUpload"]["size"] > 500000) {
+    $message = "Sorry, your file is too large.  <a href='index.php'>Back to form</a>";
+}
+// Allow certain file formats
+else if(in_array($imageFileType, $blacklistExtensions)) {
+    $message = "Sorry, this file type is not allowed. Please provide a valid image.  <a href='index.php'>Back to form</a>";
+}
+else {
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        $message = "File successfully uploaded. Your reference number is " . $reference_id . " please save it!  <a href='index.php'>Back to form</a>";
+    } else {
+        $message = "Sorry, there was an error uploading your file.  <a href='index.php'>Back to form</a>";
+    }
+}
+echo '<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
     <meta http-equiv="Content-Style-Type" content="text/css"/>
 
     <title>BigBank</title>
@@ -11,14 +47,9 @@
     <link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
 
 </head>
-
 <body>
-
 <div id="container">
-
-    <!-- Start of Page Header -->
-
-    <div id="header_container">
+<div id="header_container">
         <div id="page_header">
 
             <div id="header_company">
@@ -56,11 +87,6 @@
 
         </div>
     </div>
-
-    <!-- End of Page Header -->
-
-
-    <!-- Start of Left Sidebar -->
 
     <div id="left_sidebar">
 
@@ -141,16 +167,9 @@
 
     </div>
 
-    <!-- End of Left Sidebar -->
-
-
-    <!-- Start of Main Content Area -->
-
     <div id="maincontent_container">
         <div id="maincontent">
-
-
-            <div id="maincontent_top">
+        <div id="maincontent_top">
 
                 <!-- Start of How We Started -->
 
@@ -223,13 +242,9 @@
 
             </div>
 
-
-            <!-- Start of Featured Products -->
-
             <div id="featured_container">
                 <div id="featured">
-
-                    <h2>Annual Christmas Media Competition!</h2>
+                    <h2 style="color:#7f0000">Annual Christmas Media Competition!</h2>
 
                     <p>Welcome back to the annual christmas media competition!
                         Create and upload your contribution to the competition for a chance of winning 1,000 BigBank
@@ -237,8 +252,8 @@
                         The contribution can be an image, a short clip (less than 30 seconds) or why not a custom
                         gif?</p>
 
-                    <p>This year's theme is "Space - The Final Frontier". Deadline for submissions is January 1st, 2017
-                        23:59 CET..</p>
+                    <p>This year the theme is "Space - The Final Frontier". Deadline for submissions is January 1st, 2017
+                        23:59 CET.</p>
 
                     <p>The winners will be announced here shortly after the deadline for submissions has ended. </p>
 
@@ -248,34 +263,12 @@
                         <li>100 BigBank Club Points</li>
                     </ol>
                     <br/>
-
-                    <form action="upload.php" method="post" enctype="multipart/form-data">
-                        Select image to upload:
-                        <input type="file" name="fileToUpload" id="fileToUpload">
-                        <input type="submit" value="Upload Image" name="submit">
-                    </form>
-
-                    <p><strong>Once you have submitted your entry, you will be given an unguessable identification
-                        number for future reference.
-                        Please save it for verification that the entry is yours, if you happen to be one of the three
-                        winners. </strong></p>
+                     <p>' . $message . ' </p>
                 </div>
             </div>
-
-            <div class="clearthis">&nbsp;</div>
-            <!-- End of Featured Products -->
-
         </div>
     </div>
-    <!-- End of Main Content Area -->
-
-    <!-- Start of Page Footer -->
     <div id="page_footer">&copy;2016 BigBank</div>
-    <!-- End of Page Footer -->
-
-    <div class="clearthis">&nbsp;</div>
-
 </div>
-
 </body>
-</html>
+</html>';
